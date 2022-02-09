@@ -17,6 +17,20 @@ const create = async ({ name, quantity }) => {
   };
 };
 
+const getByName = async ({ name }) => {
+  const query = `
+    SELECT * FROM products
+    WHERE name = ?
+  `;
+
+  const values = [name];
+
+  const [result] = await connection.execute(query, values);
+
+  return result[0];
+};
+
 module.exports = {
   create,
+  getByName,
 };

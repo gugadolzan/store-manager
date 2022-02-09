@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const connection = require('../../models/connection');
 const productsModel = require('../../models/productsModel.js');
 
-describe('Create a new product in the database', () => {
+describe('Call the create method from the productsModel', () => {
   const newProduct = { name: 'produto', quantity: 10 };
 
   before(() => {
