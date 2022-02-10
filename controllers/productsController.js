@@ -3,11 +3,8 @@ const rescue = require('express-rescue');
 const productsSchema = require('../schemas/productsSchema');
 const productsService = require('../services/productsService');
 
-const newError = (error, next) => {
-  const err = new Error(error.message);
-  err.code = error.code;
-  return next(err);
-};
+const generateError = require('../utils/generateError');
+const { HTTP_STATUS_CODES } = require('../utils/statusCodes');
 
 const create = rescue(async (req, res, next) => {
   const { name, quantity } = req.body;
@@ -18,15 +15,15 @@ const create = rescue(async (req, res, next) => {
 
   const product = await productsService.create({ name, quantity });
 
-  if (product.error) return newError(product.error, next);
+  if (product.error) return generateError(product.error, next);
 
-  res.status(201).json(product);
+  res.status(HTTP_STATUS_CODES.CREATED).json(product);
 });
 
 const getAll = rescue(async (_req, res) => {
   const products = await productsService.getAll();
 
-  res.status(200).json(products);
+  res.status(HTTP_STATUS_CODES.OK).json(products);
 });
 
 const getById = rescue(async (req, res, next) => {
@@ -34,9 +31,9 @@ const getById = rescue(async (req, res, next) => {
 
   const product = await productsService.getById({ id });
 
-  if (product.error) return newError(product.error, next);
+  if (product.error) return generateError(product.error, next);
 
-  res.status(200).json(product);
+  res.status(HTTP_STATUS_CODES.OK).json(product);
 });
 
 module.exports = {
