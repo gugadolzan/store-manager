@@ -1,61 +1,61 @@
-const { expect } = require('chai');
-const sinon = require('sinon');
+const { expect } = require("chai");
+const sinon = require("sinon");
 
-const productsModel = require('../../models/productsModel.js');
-const productsService = require('../../services/productsService.js');
+const productsModel = require("../../models/productsModel.js");
+const productsService = require("../../services/productsService.js");
 
-describe('Call the create method from the productsService', () => {
-  const newProduct = { name: 'produto', quantity: 10 };
+describe("Call the create method from the productsService", () => {
+  const newProduct = { name: "produto", quantity: 10 };
 
-  describe('when the product already exists', () => {
+  describe("when the product already exists", () => {
     before(() => {
       const product = { ...newProduct, id: 1 };
 
-      sinon.stub(productsModel, 'getByName').resolves(product);
+      sinon.stub(productsModel, "getByName").resolves(product);
     });
 
     after(() => {
       productsModel.getByName.restore();
     });
 
-    it('should return an object', async () => {
+    it("should return an object", async () => {
       const response = await productsService.create(newProduct);
 
-      expect(response).to.be.an('object');
+      expect(response).to.be.an("object");
     });
 
     it("should return an object with the property 'error'", async () => {
       const response = await productsService.create(newProduct);
 
-      expect(response).to.have.deep.property('error', {
-        code: 'alreadyExists',
-        message: 'Product already exists',
+      expect(response).to.have.deep.property("error", {
+        code: "alreadyExists",
+        message: "Product already exists",
       });
     });
   });
 
-  describe('when the product is created', () => {
+  describe("when the product is created", () => {
     before(() => {
       const product = { ...newProduct, id: 1 };
 
-      sinon.stub(productsModel, 'getByName').resolves(undefined);
-      sinon.stub(productsModel, 'create').resolves(product);
+      sinon.stub(productsModel, "getByName").resolves(undefined);
+      sinon.stub(productsModel, "create").resolves(product);
     });
 
     after(() => {
       productsModel.getByName.restore();
     });
 
-    it('should return an object', async () => {
+    it("should return an object", async () => {
       const response = await productsService.create(newProduct);
 
-      expect(response).to.be.an('object');
+      expect(response).to.be.an("object");
     });
 
     it("should return an object with the properties 'id', 'name' and 'quantity'", async () => {
       const response = await productsService.create(newProduct);
 
-      expect(response).to.include.all.keys('id', 'name', 'quantity');
+      expect(response).to.include.all.keys("id", "name", "quantity");
     });
   });
 });
