@@ -24,10 +24,11 @@ describe('Call the create method from the productsService', () => {
       expect(response).to.be.an('object');
     });
 
-    it('should return an object with the correct properties', async () => {
+    it("should return an object with the property 'error'", async () => {
       const response = await productsService.create(newProduct);
 
       expect(response).to.have.deep.property('error', {
+        code: 'alreadyExists',
         message: 'Product already exists',
       });
     });
@@ -51,7 +52,7 @@ describe('Call the create method from the productsService', () => {
       expect(response).to.be.an('object');
     });
 
-    it('should return an object with the correct properties', async () => {
+    it("should return an object with the properties 'id', 'name' and 'quantity'", async () => {
       const response = await productsService.create(newProduct);
 
       expect(response).to.include.all.keys('id', 'name', 'quantity');

@@ -24,7 +24,7 @@ describe('Call the create method from the productsModel', () => {
       expect(response).to.be.an('object');
     });
 
-    it('should return an object with the correct properties', async () => {
+    it("should return an object with the properties 'id', 'name' and 'quantity'", async () => {
       const response = await productsModel.create(newProduct);
 
       expect(response).to.include.all.keys('id', 'name', 'quantity');
