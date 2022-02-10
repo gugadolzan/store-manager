@@ -4,6 +4,7 @@ const STATUS_BY_ERROR_TYPE = {
 
 const STATUS_BY_ERROR_CODE = {
   alreadyExists: 409,
+  notFound: 404,
 };
 
 // Exporting array of middlewares, which will be executed in order

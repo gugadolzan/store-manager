@@ -17,6 +17,29 @@ const create = async ({ name, quantity }) => {
   };
 };
 
+const getAll = async () => {
+  const query = `
+  SELECT * FROM products
+`;
+
+  const [result] = await connection.execute(query);
+
+  return result;
+};
+
+const getById = async ({ id }) => {
+  const query = `
+  SELECT * FROM products
+  WHERE id = ?
+`;
+
+  const values = [id];
+
+  const [result] = await connection.execute(query, values);
+
+  return result[0];
+};
+
 const getByName = async ({ name }) => {
   const query = `
     SELECT * FROM products
@@ -32,5 +55,7 @@ const getByName = async ({ name }) => {
 
 module.exports = {
   create,
+  getAll,
+  getById,
   getByName,
 };
