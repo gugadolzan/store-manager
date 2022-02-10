@@ -3,6 +3,12 @@ const rescue = require('express-rescue');
 const productsSchema = require('../schemas/productsSchema');
 const productsService = require('../services/productsService');
 
+const newError = (error, next) => {
+  const err = new Error(error.message);
+  err.code = error.code;
+  return next(err);
+};
+
 const create = rescue(async (req, res, next) => {
   const { name, quantity } = req.body;
 
@@ -12,7 +18,7 @@ const create = rescue(async (req, res, next) => {
 
   const product = await productsService.create({ name, quantity });
 
-  if (product.error) return next(product.error);
+  if (product.error) return newError(product.error, next);
 
   res.status(201).json(product);
 });
@@ -28,7 +34,7 @@ const getById = rescue(async (req, res, next) => {
 
   const product = await productsService.getById({ id });
 
-  if (product.error) return next(product.error);
+  if (product.error) return newError(product.error, next);
 
   res.status(200).json(product);
 });

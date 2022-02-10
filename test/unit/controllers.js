@@ -83,10 +83,10 @@ describe('Call the create method from the productsController', () => {
       expect(next.calledOnce).to.be.true;
     });
 
-    it('should call the next function with an object with the error message', async () => {
+    it('should call the next function with an error with message "Product already exists"', async () => {
       await productsController.create(request, response, next);
 
-      expect(next.calledWith(sinon.match.instanceOf(Object))).to.be.true;
+      expect(next.calledWith(sinon.match.instanceOf(Error))).to.be.true;
       expect(
         next.calledWith(sinon.match.has('message', 'Product already exists'))
       ).to.be.true;
