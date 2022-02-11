@@ -60,9 +60,24 @@ const update = [
   }),
 ];
 
+const remove = rescue(async (req, res) => {
+  const { id } = req.params;
+
+  const product = await productsService.remove({ id });
+
+  if (product.error) {
+    const err = new Error(product.error.message);
+    err.code = product.error.code;
+    throw err;
+  }
+
+  res.status(HTTP_STATUS_CODES.OK).json(product);
+});
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
+  remove,
 };
