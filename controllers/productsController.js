@@ -1,27 +1,26 @@
 const rescue = require('express-rescue');
 
-const productsSchema = require('../schemas/productsSchema');
+const validateProduct = require('./middlewares/validateProduct');
 const productsService = require('../services/productsService');
 
 const { HTTP_STATUS_CODES } = require('../utils/statusCodes');
 
-const create = rescue(async (req, res) => {
-  const { name, quantity } = req.body;
+const create = [
+  validateProduct,
+  rescue(async (req, res) => {
+    const { name, quantity } = req.body;
 
-  const { error } = productsSchema.validate({ name, quantity });
+    const product = await productsService.create({ name, quantity });
 
-  if (error) throw error;
+    if (product.error) {
+      const err = new Error(product.error.message);
+      err.code = product.error.code;
+      throw err;
+    }
 
-  const product = await productsService.create({ name, quantity });
-
-  if (product.error) {
-    const err = new Error(product.error.message);
-    err.code = product.error.code;
-    throw err;
-  }
-
-  res.status(HTTP_STATUS_CODES.CREATED).json(product);
-});
+    res.status(HTTP_STATUS_CODES.CREATED).json(product);
+  }),
+];
 
 const getAll = rescue(async (_req, res) => {
   const products = await productsService.getAll();
@@ -43,8 +42,27 @@ const getById = rescue(async (req, res) => {
   res.status(HTTP_STATUS_CODES.OK).json(product);
 });
 
+const update = [
+  validateProduct,
+  rescue(async (req, res) => {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
+
+    const product = await productsService.update({ id, name, quantity });
+
+    if (product.error) {
+      const err = new Error(product.error.message);
+      err.code = product.error.code;
+      throw err;
+    }
+
+    res.status(HTTP_STATUS_CODES.OK).json(product);
+  }),
+];
+
 module.exports = {
   create,
   getAll,
   getById,
+  update,
 };
