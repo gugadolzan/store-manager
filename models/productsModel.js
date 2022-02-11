@@ -1,10 +1,7 @@
 const connection = require('./connection');
 
 const create = async ({ name, quantity }) => {
-  const query = `
-    INSERT INTO products (name, quantity)
-    VALUES (?, ?)
-  `;
+  const query = 'INSERT INTO products (name, quantity) VALUES (?, ?)';
 
   const values = [name, quantity];
 
@@ -18,9 +15,7 @@ const create = async ({ name, quantity }) => {
 };
 
 const getAll = async () => {
-  const query = `
-  SELECT * FROM products
-`;
+  const query = 'SELECT * FROM products';
 
   const [result] = await connection.execute(query);
 
@@ -28,10 +23,7 @@ const getAll = async () => {
 };
 
 const getById = async ({ id }) => {
-  const query = `
-  SELECT * FROM products
-  WHERE id = ?
-`;
+  const query = 'SELECT * FROM products WHERE id = ?';
 
   const values = [id];
 
@@ -41,10 +33,7 @@ const getById = async ({ id }) => {
 };
 
 const getByName = async ({ name }) => {
-  const query = `
-    SELECT * FROM products
-    WHERE name = ?
-  `;
+  const query = 'SELECT * FROM products WHERE name = ?';
 
   const values = [name];
 
@@ -54,24 +43,21 @@ const getByName = async ({ name }) => {
 };
 
 const update = async ({ id, name, quantity }) => {
-  const query = `
-    UPDATE products
-    SET name = ?, quantity = ?
-    WHERE id = ?
-  `;
+  const query = 'UPDATE products SET name = ?, quantity = ? WHERE id = ?';
 
   const values = [name, quantity, id];
 
   await connection.execute(query, values);
 
-  return getById({ id });
+  return {
+    id,
+    name,
+    quantity,
+  };
 };
 
 const remove = async ({ id }) => {
-  const query = `
-    DELETE FROM products
-    WHERE id = ?
-  `;
+  const query = 'DELETE FROM products WHERE id = ?';
 
   const values = [id];
 
