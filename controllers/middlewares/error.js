@@ -6,6 +6,9 @@ const {
 
 // Exporting array of middlewares, which will be executed in order
 module.exports = [
+  /**
+   * Middleware for handling Joi errors
+   */
   (err, _req, res, next) => {
     if (!err.isJoi) return next(err);
 
@@ -15,6 +18,9 @@ module.exports = [
 
     res.status(status).json({ message });
   },
+  /**
+   * Middleware for handling other errors
+   */
   (err, _req, res, _next) => {
     const status = STATUS_BY_ERROR_CODE[err.code] || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
     const message = err.message || 'Internal server error';
