@@ -1,4 +1,4 @@
-const HTTP_STATUS_CODES = {
+module.exports = {
   OK: 200,
   CREATED: 201,
   NO_CONTENT: 204,
@@ -9,19 +9,4 @@ const HTTP_STATUS_CODES = {
   CONFLICT: 409,
   UNPROCESSABLE_ENTITY: 422,
   INTERNAL_SERVER_ERROR: 500,
-};
-
-const STATUS_BY_ERROR_TYPE = {
-  'any.required': HTTP_STATUS_CODES.BAD_REQUEST,
-};
-
-const STATUS_BY_ERROR_CODE = {
-  alreadyExists: HTTP_STATUS_CODES.CONFLICT,
-  notFound: HTTP_STATUS_CODES.NOT_FOUND,
-};
-
-module.exports = {
-  HTTP_STATUS_CODES,
-  STATUS_BY_ERROR_TYPE,
-  STATUS_BY_ERROR_CODE,
 };

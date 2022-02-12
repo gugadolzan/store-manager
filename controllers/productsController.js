@@ -2,7 +2,7 @@ const rescue = require('express-rescue');
 
 const productsService = require('../services/productsService');
 const productsSchema = require('../schemas/productsSchema');
-const { HTTP_STATUS_CODES } = require('../utils/statusCodes');
+const { OK, CREATED } = require('../utils/statusCodes');
 
 const create = rescue(async (req, res) => {
   const { name, quantity } = req.body;
@@ -19,13 +19,13 @@ const create = rescue(async (req, res) => {
     throw err;
   }
 
-  res.status(HTTP_STATUS_CODES.CREATED).json(product);
+  res.status(CREATED).json(product);
 });
 
 const getAll = rescue(async (_req, res) => {
   const products = await productsService.getAll();
 
-  res.status(HTTP_STATUS_CODES.OK).json(products);
+  res.status(OK).json(products);
 });
 
 const getById = rescue(async (req, res) => {
@@ -39,7 +39,7 @@ const getById = rescue(async (req, res) => {
     throw err;
   }
 
-  res.status(HTTP_STATUS_CODES.OK).json(product);
+  res.status(OK).json(product);
 });
 
 const update = rescue(async (req, res) => {
@@ -58,7 +58,7 @@ const update = rescue(async (req, res) => {
     throw err;
   }
 
-  res.status(HTTP_STATUS_CODES.OK).json(product);
+  res.status(OK).json(product);
 });
 
 const remove = rescue(async (req, res) => {
@@ -72,7 +72,7 @@ const remove = rescue(async (req, res) => {
     throw err;
   }
 
-  res.status(HTTP_STATUS_CODES.OK).json(product);
+  res.status(OK).json(product);
 });
 
 module.exports = {

@@ -1,8 +1,19 @@
 const {
-  HTTP_STATUS_CODES,
-  STATUS_BY_ERROR_CODE,
-  STATUS_BY_ERROR_TYPE,
+  BAD_REQUEST,
+  NOT_FOUND,
+  CONFLICT,
+  UNPROCESSABLE_ENTITY,
+  INTERNAL_SERVER_ERROR,
 } = require('../../utils/statusCodes');
+
+const BY_ERROR_CODE = {
+  alreadyExists: CONFLICT,
+  notFound: NOT_FOUND,
+};
+
+const BY_ERROR_TYPE = {
+  'any.required': BAD_REQUEST,
+};
 
 // Exporting array of middlewares, which will be executed in order
 module.exports = [
@@ -12,8 +23,7 @@ module.exports = [
   (err, _req, res, next) => {
     if (!err.isJoi) return next(err);
 
-    const status = STATUS_BY_ERROR_TYPE[err.details[0].type]
-      || HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY;
+    const status = BY_ERROR_TYPE[err.details[0].type] || UNPROCESSABLE_ENTITY;
     const { message } = err.details[0];
 
     res.status(status).json({ message });
@@ -22,7 +32,7 @@ module.exports = [
    * Middleware for handling other errors
    */
   (err, _req, res, _next) => {
-    const status = STATUS_BY_ERROR_CODE[err.code] || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR;
+    const status = BY_ERROR_CODE[err.code] || INTERNAL_SERVER_ERROR;
     const message = err.message || 'Internal server error';
 
     if (status === 500) console.error(err);
