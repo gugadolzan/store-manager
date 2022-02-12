@@ -6,12 +6,12 @@ const {
   INTERNAL_SERVER_ERROR,
 } = require('../../utils/statusCodes');
 
-const BY_ERROR_CODE = {
+const byErrorCode = {
   alreadyExists: CONFLICT,
   notFound: NOT_FOUND,
 };
 
-const BY_ERROR_TYPE = {
+const byErrorType = {
   'any.required': BAD_REQUEST,
 };
 
@@ -23,7 +23,7 @@ module.exports = [
   (err, _req, res, next) => {
     if (!err.isJoi) return next(err);
 
-    const status = BY_ERROR_TYPE[err.details[0].type] || UNPROCESSABLE_ENTITY;
+    const status = byErrorType[err.details[0].type] || UNPROCESSABLE_ENTITY;
     const { message } = err.details[0];
 
     res.status(status).json({ message });
@@ -32,7 +32,7 @@ module.exports = [
    * Middleware for handling other errors
    */
   (err, _req, res, _next) => {
-    const status = BY_ERROR_CODE[err.code] || INTERNAL_SERVER_ERROR;
+    const status = byErrorCode[err.code] || INTERNAL_SERVER_ERROR;
     const message = err.message || 'Internal server error';
 
     if (status === 500) console.error(err);
