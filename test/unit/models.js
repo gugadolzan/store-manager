@@ -6,19 +6,19 @@ const productsModel = require("../../models/productsModel.js");
 
 describe("Products model", () => {
   describe("when calling the create method", () => {
-    const product = { name: "produto", quantity: 10 };
-
-    before(() => {
-      const execute = [{ ...product, insertId: 1 }];
-
-      sinon.stub(connection, "execute").resolves(execute);
-    });
-
-    after(() => {
-      connection.execute.restore();
-    });
-
     describe("when the product is created", () => {
+      const product = { name: "produto", quantity: 10 };
+
+      before(() => {
+        const execute = [{ ...product, insertId: 1 }];
+
+        sinon.stub(connection, "execute").resolves(execute);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
       it("should return an object with the properties 'id', 'name' and 'quantity' and respective values", async () => {
         const response = await productsModel.create(product);
 
@@ -198,27 +198,28 @@ describe("Products model", () => {
   });
 
   describe("when calling the update method", () => {
-    const product = { id: 1, name: "produto", quantity: 15 };
-
-    before(() => {
-      sinon.stub(connection, "execute").resolves();
-    });
-
-    after(() => {
-      connection.execute.restore();
-    });
-
     describe("when the product is updated", () => {
-      it("should return an object with the properties 'id', 'name' and 'quantity' and respective values", async () => {
-        const response = await productsModel.update(product);
+      const product = { id: 1, name: "produto", quantity: 15 };
 
-        expect(response).to.be.an("object");
-        expect(response).to.include.all.keys("id", "name", "quantity");
-        expect(response).to.deep.equal({
-          id: 1,
-          name: "produto",
-          quantity: 15,
-        });
+      before(() => {
+        sinon.stub(connection, "execute").resolves();
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it("should call the execute method with the correct parameters", async () => {
+        await productsModel.update(product);
+
+        const query = connection.execute.args[0][0];
+        const values = connection.execute.args[0][1];
+
+        expect(connection.execute.calledOnce).to.be.true;
+        expect(query).to.equal(
+          "\n    UPDATE products\n    SET name = ?, quantity = ?\n    WHERE id = ?\n  "
+        );
+        expect(values).to.deep.equal(["produto", 15, 1]);
       });
     });
   });
@@ -233,14 +234,17 @@ describe("Products model", () => {
         connection.execute.restore();
       });
 
-      it("should call the execute method of the connection with the correct parameters", async () => {
+      it("should call the execute method with the correct parameters", async () => {
         await productsModel.remove({ id: 1 });
 
-        const execute = connection.execute.getCall(0).args;
+        const query = connection.execute.args[0][0];
+        const values = connection.execute.args[0][1];
 
         expect(connection.execute.calledOnce).to.be.true;
-        expect(execute[1]).to.deep.equal([1]);
-        expect(execute[0]).to.equal("DELETE FROM products WHERE id = ?");
+        expect(query).to.equal(
+          "\n    DELETE FROM products\n    WHERE id = ?\n  "
+        );
+        expect(values).to.deep.equal([1]);
       });
     });
   });
