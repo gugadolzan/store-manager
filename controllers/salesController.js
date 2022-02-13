@@ -68,9 +68,24 @@ const update = rescue(async (req, res) => {
   res.status(OK).json(result);
 });
 
+const remove = rescue(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await salesService.remove({ id });
+
+  if (result.error) {
+    const err = new Error(result.error.message);
+    err.code = result.error.code;
+    throw err;
+  }
+
+  res.status(OK).json(result);
+});
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
+  remove,
 };
