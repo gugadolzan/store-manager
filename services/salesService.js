@@ -35,8 +35,19 @@ const getById = async ({ id }) => {
   return result;
 };
 
+const update = async ({ id, sale }) => {
+  const { error } = await getById({ id });
+
+  if (error) return { error };
+
+  const result = await salesModel.update({ id, sale });
+
+  return result;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  update,
 };
