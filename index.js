@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const errorMiddleware = require('./controllers/middlewares/error');
+const errorMiddleware = require('./middlewares/error');
 const productsRouter = require('./routes/productsRouter');
 const salesRouter = require('./routes/salesRouter');
 

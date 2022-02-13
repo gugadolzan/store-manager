@@ -4,7 +4,7 @@ const {
   CONFLICT,
   UNPROCESSABLE_ENTITY,
   INTERNAL_SERVER_ERROR,
-} = require('../../helpers/statusCodes');
+} = require('../helpers/statusCodes');
 
 const byErrorCode = {
   alreadyExists: CONFLICT,
