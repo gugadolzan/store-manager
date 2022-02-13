@@ -20,12 +20,6 @@ const create = rescue(async (req, res) => {
 
   const result = await salesService.create(sales);
 
-  if (result.error) {
-    const err = new Error(result.error.message);
-    err.code = result.error.code;
-    throw err;
-  }
-
   res.status(CREATED).json(result);
 });
 

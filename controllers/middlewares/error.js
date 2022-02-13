@@ -8,6 +8,7 @@ const {
 
 const byErrorCode = {
   alreadyExists: CONFLICT,
+  notEnoughQuantity: UNPROCESSABLE_ENTITY,
   notFound: NOT_FOUND,
 };
 

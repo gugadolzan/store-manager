@@ -2,29 +2,31 @@ const productsModel = require('../models/productsModel');
 const salesModel = require('../models/salesModel');
 
 const create = async (sales) => {
-  const products = await Promise.all(
+  await Promise.all(
     sales.map(async (sale) => {
       const product = await productsModel.getById({ id: sale.product_id });
-      return product;
-    }),
-  );
 
-  // Check if any of the products are not found
-  if (products.some((product) => !product)) {
-    return { error: { code: 'notFound', message: 'Product not found' } };
-  }
+      // Check if the product exists
+      if (!product) {
+        const err = new Error('Product not found');
+        err.code = 'notFound';
+        throw err;
+      }
 
-  // Update quantity of each product in the database
-  await Promise.all(
-    products.map(async (product, index) => {
-      const newQuantity = product.quantity - sales[index].quantity;
+      const newQuantity = product.quantity - sale.quantity;
+
+      if (newQuantity <= 0) {
+        const err = new Error('Such amount is not permitted to sell');
+        err.code = 'notEnoughQuantity';
+        throw err;
+      }
+
+      // Update the quantity of the product
       await productsModel.update({ ...product, quantity: newQuantity });
     }),
   );
 
-  const result = await salesModel.create(sales);
-
-  return result;
+  return salesModel.create(sales);
 };
 
 const getAll = async () => {
