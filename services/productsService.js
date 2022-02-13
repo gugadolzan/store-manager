@@ -37,9 +37,9 @@ const update = async ({ id, name, quantity }) => {
     return { error: { code: 'notFound', message: 'Product not found' } };
   }
 
-  const updatedProduct = await productsModel.update({ id, name, quantity });
+  await productsModel.update({ id, name, quantity });
 
-  return updatedProduct;
+  return { id, name, quantity };
 };
 
 const remove = async ({ id }) => {

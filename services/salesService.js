@@ -40,9 +40,9 @@ const update = async ({ id, sale }) => {
 
   if (error) return { error };
 
-  const result = await salesModel.update({ id, sale });
+  await salesModel.update({ id, sale });
 
-  return result;
+  return { saleId: id, itemUpdated: [{ ...sale }] };
 };
 
 module.exports = {

@@ -1,7 +1,7 @@
 const rescue = require('express-rescue');
 
-const salesService = require('../services/salesService');
 const salesSchema = require('../schemas/salesSchema');
+const salesService = require('../services/salesService');
 const { OK, CREATED } = require('../utils/statusCodes');
 
 const serialize = (sale) => ({

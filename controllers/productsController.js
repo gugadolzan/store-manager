@@ -1,7 +1,7 @@
 const rescue = require('express-rescue');
 
-const productsService = require('../services/productsService');
 const productsSchema = require('../schemas/productsSchema');
+const productsService = require('../services/productsService');
 const { OK, CREATED } = require('../utils/statusCodes');
 
 const create = rescue(async (req, res) => {

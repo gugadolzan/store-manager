@@ -1,25 +1,34 @@
 const connection = require('./connection');
 
-const create = async (sales) => {
+const createSale = async () => {
   // Insert default values into sales table
   // Reference: https://stackoverflow.com/a/68719760
-  const query = 'INSERT INTO sales VALUES ()';
+  const query = `
+    INSERT INTO sales
+    VALUES ()
+  `;
 
-  const [{ insertId: id }] = await connection.execute(query);
+  const [{ insertId }] = await connection.execute(query);
 
-  const query2 = 'INSERT INTO sales_products VALUES (?, ?, ?)';
+  return insertId;
+};
 
-  const itemsSold = await Promise.all(
+const create = async (sales) => {
+  const id = await createSale();
+
+  const query = `
+    INSERT INTO sales_products
+    VALUES (?, ?, ?)
+  `;
+
+  await Promise.all(
     sales.map(async (sale) => {
       const values = [id, sale.product_id, sale.quantity];
-
-      await connection.execute(query2, values);
-
-      return { ...sale };
+      await connection.execute(query, values);
     }),
   );
 
-  return { id, itemsSold };
+  return { id, itemsSold: sales };
 };
 
 const getAll = async () => {
@@ -61,8 +70,6 @@ const update = async ({ id, sale }) => {
   const values = [sale.quantity, id, sale.product_id];
 
   await connection.execute(query, values);
-
-  return { saleId: id, itemUpdated: [{ ...sale }] };
 };
 
 module.exports = {
