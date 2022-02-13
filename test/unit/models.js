@@ -3,6 +3,7 @@ const sinon = require("sinon");
 
 const connection = require("../../models/connection");
 const productsModel = require("../../models/productsModel.js");
+const salesModel = require("../../models/salesModel.js");
 
 describe("Products model", () => {
   describe("when calling the create method", () => {
@@ -244,6 +245,252 @@ describe("Products model", () => {
         expect(query).to.equal(
           "\n    DELETE FROM products\n    WHERE id = ?\n  "
         );
+        expect(values).to.deep.equal([1]);
+      });
+    });
+  });
+});
+
+describe("Sales model", () => {
+  describe("when calling the createSale method", () => {
+    describe("when the sale is created", () => {
+      before(() => {
+        sinon.stub(connection, "execute").resolves([{ insertId: 1 }]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it("should call the execute method with the correct parameters", async () => {
+        await salesModel.createSale();
+
+        const query = connection.execute.args[0][0];
+
+        expect(connection.execute.calledOnce).to.be.true;
+        expect(query).to.equal("\n    INSERT INTO sales\n    VALUES ()\n  ");
+      });
+
+      it("should return the id of the sale created", async () => {
+        const response = await salesModel.createSale();
+
+        expect(response).to.equal(1);
+      });
+    });
+  });
+
+  describe("when calling the create method", () => {
+    describe("when the sale is created", () => {
+      const sales = [
+        {
+          product_id: 1,
+          quantity: 2,
+        },
+        {
+          product_id: 2,
+          quantity: 5,
+        },
+      ];
+
+      before(() => {
+        sinon
+          .stub(connection, "execute")
+          .onFirstCall()
+          .resolves([{ insertId: 1 }])
+          .onSecondCall()
+          .resolves();
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it("should call the execute method with the correct query and return the sale created", async () => {
+        const response = await salesModel.create(sales);
+
+        // Get query from second call
+        const query = connection.execute.args[1][0];
+
+        expect(query).to.equal(
+          "\n    INSERT INTO sales_products\n    VALUES (?, ?, ?)\n  "
+        );
+        expect(response).to.deep.equal({
+          id: 1,
+          itemsSold: [
+            {
+              product_id: 1,
+              quantity: 2,
+            },
+            {
+              product_id: 2,
+              quantity: 5,
+            },
+          ],
+        });
+      });
+    });
+  });
+
+  describe("when calling the getAll method", () => {
+    describe("when there are sales", () => {
+      before(() => {
+        const execute = [
+          [
+            {
+              id: 1,
+              itemsSold: [
+                {
+                  product_id: 1,
+                  quantity: 2,
+                },
+                {
+                  product_id: 2,
+                  quantity: 5,
+                },
+              ],
+            },
+            {
+              id: 2,
+              itemsSold: [
+                {
+                  product_id: 1,
+                  quantity: 2,
+                },
+                {
+                  product_id: 2,
+                  quantity: 5,
+                },
+              ],
+            },
+          ],
+        ];
+
+        sinon.stub(connection, "execute").resolves(execute);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it("should return the sales", async () => {
+        const response = await salesModel.getAll();
+
+        expect(response).to.deep.equal([
+          {
+            saleId: 1,
+            itemsSold: [
+              {
+                product_id: 1,
+                quantity: 2,
+              },
+              {
+                product_id: 2,
+                quantity: 5,
+              },
+            ],
+          },
+          {
+            saleId: 2,
+            itemsSold: [
+              {
+                product_id: 1,
+                quantity: 2,
+              },
+              {
+                product_id: 2,
+                quantity: 5,
+              },
+            ],
+          },
+        ]);
+      });
+    });
+  });
+
+  describe("when calling the getById method", () => {
+    describe("when the sale exists", () => {
+      const sale = [
+        {
+          date: "2021-09-09T04:54:29.000Z",
+          product_id: 1,
+          quantity: 2,
+        },
+        {
+          date: "2021-09-09T04:54:54.000Z",
+          product_id: 2,
+          quantity: 2,
+        },
+      ];
+
+      before(() => {
+        const execute = [sale];
+
+        sinon.stub(connection, "execute").resolves(execute);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it("should return the sale", async () => {
+        const response = await salesModel.getById({ id: 1 });
+
+        expect(response).to.deep.equal(sale);
+      });
+    });
+  });
+
+  describe("when calling the update method", () => {
+    describe("when the sale is updated", () => {
+      const sale = {
+        id: 1,
+        sale: {
+          product_id: 1,
+          quantity: 6,
+        },
+      };
+
+      before(() => {
+        sinon.stub(connection, "execute").resolves();
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it("should call the execute method with the corrects parameters", async () => {
+        await salesModel.update(sale);
+
+        const query = connection.execute.args[0][0];
+        const values = connection.execute.args[0][1];
+
+        expect(connection.execute.calledOnce).to.be.true;
+        expect(query).to.equal(
+          "\n    UPDATE sales_products\n    SET quantity = ?\n    WHERE sale_id = ? AND product_id = ?\n  "
+        );
+        expect(values).to.deep.equal([6, 1, 1]);
+      });
+    });
+  });
+
+  describe("when calling the remove method", () => {
+    describe("when the sale is removed", () => {
+      before(() => {
+        sinon.stub(connection, "execute").resolves();
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it("should call the execute method with the corrects parameters", async () => {
+        await salesModel.remove({ id: 1 });
+
+        const query = connection.execute.args[0][0];
+        const values = connection.execute.args[0][1];
+
+        expect(connection.execute.calledOnce).to.be.true;
+        expect(query).to.equal("\n    DELETE FROM sales\n    WHERE id = ?\n  ");
         expect(values).to.deep.equal([1]);
       });
     });

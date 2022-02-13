@@ -84,6 +84,7 @@ const remove = async ({ id }) => {
 };
 
 module.exports = {
+  createSale,
   create,
   getAll,
   getById,
