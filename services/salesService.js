@@ -14,6 +14,14 @@ const create = async (sales) => {
     return { error: { code: 'notFound', message: 'Product not found' } };
   }
 
+  // Update quantity of each product in the database
+  await Promise.all(
+    products.map(async (product, index) => {
+      const newQuantity = product.quantity - sales[index].quantity;
+      await productsModel.update({ ...product, quantity: newQuantity });
+    }),
+  );
+
   const result = await salesModel.create(sales);
 
   return result;
@@ -49,6 +57,15 @@ const remove = async ({ id }) => {
   const result = await getById({ id });
 
   if (result.error) return result;
+
+  // Restore quantity of each product in the database
+  await Promise.all(
+    result.map(async (sale) => {
+      const product = await productsModel.getById({ id: sale.product_id });
+      const newQuantity = product.quantity + sale.quantity;
+      await productsModel.update({ ...product, quantity: newQuantity });
+    }),
+  );
 
   await salesModel.remove({ id });
 
