@@ -2,7 +2,7 @@ const rescue = require('express-rescue');
 
 const salesService = require('../services/salesService');
 const salesSchema = require('../schemas/salesSchema');
-const { CREATED } = require('../utils/statusCodes');
+const { OK, CREATED } = require('../utils/statusCodes');
 
 const serialize = (sale) => ({
   productId: sale.product_id,
@@ -29,6 +29,28 @@ const create = rescue(async (req, res) => {
   res.status(CREATED).json(result);
 });
 
+const getAll = rescue(async (_req, res) => {
+  const result = await salesService.getAll();
+
+  res.status(OK).json(result);
+});
+
+const getById = rescue(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await salesService.getById({ id });
+
+  if (result.error) {
+    const err = new Error(result.error.message);
+    err.code = result.error.code;
+    throw err;
+  }
+
+  res.status(OK).json(result);
+});
+
 module.exports = {
   create,
+  getAll,
+  getById,
 };
