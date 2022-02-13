@@ -24,9 +24,7 @@ const getById = async ({ id }) => {
   const product = await productsModel.getById({ id });
 
   if (!product) {
-    return {
-      error: { code: 'notFound', message: 'Product not found' },
-    };
+    return { error: { code: 'notFound', message: 'Product not found' } };
   }
 
   return product;
@@ -36,9 +34,7 @@ const update = async ({ id, name, quantity }) => {
   const product = await productsModel.getById({ id });
 
   if (!product) {
-    return {
-      error: { code: 'notFound', message: 'Product not found' },
-    };
+    return { error: { code: 'notFound', message: 'Product not found' } };
   }
 
   const updatedProduct = await productsModel.update({ id, name, quantity });
@@ -50,9 +46,7 @@ const remove = async ({ id }) => {
   const product = await productsModel.getById({ id });
 
   if (!product) {
-    return {
-      error: { code: 'notFound', message: 'Product not found' },
-    };
+    return { error: { code: 'notFound', message: 'Product not found' } };
   }
 
   await productsModel.remove({ id });
