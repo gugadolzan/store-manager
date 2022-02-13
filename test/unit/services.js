@@ -19,14 +19,12 @@ describe("Products service", () => {
         productsModel.getByName.restore();
       });
 
-      it("should return an object with the property 'error' and respective value", async () => {
-        const response = await productsService.create(newProduct);
-
-        expect(response).to.be.an("object");
-        expect(response).to.have.deep.property("error", {
-          code: "alreadyExists",
-          message: "Product already exists",
-        });
+      it("should throw an error saying that the product already exists", () => {
+        try {
+          productsService.create(newProduct);
+        } catch (error) {
+          expect(error.message).to.be.equal("alreadyExists");
+        }
       });
     });
 
@@ -157,14 +155,12 @@ describe("Products service", () => {
         productsModel.getById.restore();
       });
 
-      it("should return an object with the property 'error' and respective value", async () => {
-        const response = await productsService.getById({ id: 1 });
-
-        expect(response).to.be.an("object");
-        expect(response).to.have.deep.property("error", {
-          code: "notFound",
-          message: "Product not found",
-        });
+      it("should throw an error with the message 'productNotFound'", async () => {
+        try {
+          productsService.getById({ id: 1 });
+        } catch (error) {
+          expect(error.message).to.be.equal("productNotFound");
+        }
       });
     });
   });
@@ -205,14 +201,12 @@ describe("Products service", () => {
         productsModel.getById.restore();
       });
 
-      it("should return an object with the property 'error' and respective value", async () => {
-        const response = await productsService.update(product);
-
-        expect(response).to.be.an("object");
-        expect(response).to.have.deep.property("error", {
-          code: "notFound",
-          message: "Product not found",
-        });
+      it("should throw an error saying that the product already exists", () => {
+        try {
+          productsService.update(product);
+        } catch (error) {
+          expect(error.message).to.be.equal("productNotFound");
+        }
       });
     });
   });
@@ -257,14 +251,12 @@ describe("Products service", () => {
         productsModel.getById.restore();
       });
 
-      it("should return an object with the property 'error' and respective value", async () => {
-        const response = await productsService.remove({ id: 1 });
-
-        expect(response).to.be.an("object");
-        expect(response).to.have.deep.property("error", {
-          code: "notFound",
-          message: "Product not found",
-        });
+      it("should throw an error saying that the product already exists", () => {
+        try {
+          productsService.remove({ id: 1 });
+        } catch (error) {
+          expect(error.message).to.be.equal("productNotFound");
+        }
       });
     });
   });
