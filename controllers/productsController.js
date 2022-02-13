@@ -2,7 +2,7 @@ const rescue = require('express-rescue');
 
 const productsSchema = require('../schemas/productsSchema');
 const productsService = require('../services/productsService');
-const { OK, CREATED } = require('../utils/statusCodes');
+const { OK, CREATED } = require('../helpers/statusCodes');
 
 const create = rescue(async (req, res) => {
   const { name, quantity } = req.body;
@@ -12,12 +12,6 @@ const create = rescue(async (req, res) => {
   if (error) throw error;
 
   const product = await productsService.create({ name, quantity });
-
-  if (product.error) {
-    const err = new Error(product.error.message);
-    err.code = product.error.code;
-    throw err;
-  }
 
   res.status(CREATED).json(product);
 });
@@ -33,12 +27,6 @@ const getById = rescue(async (req, res) => {
 
   const product = await productsService.getById({ id });
 
-  if (product.error) {
-    const err = new Error(product.error.message);
-    err.code = product.error.code;
-    throw err;
-  }
-
   res.status(OK).json(product);
 });
 
@@ -52,12 +40,6 @@ const update = rescue(async (req, res) => {
 
   const product = await productsService.update({ id, name, quantity });
 
-  if (product.error) {
-    const err = new Error(product.error.message);
-    err.code = product.error.code;
-    throw err;
-  }
-
   res.status(OK).json(product);
 });
 
@@ -65,12 +47,6 @@ const remove = rescue(async (req, res) => {
   const { id } = req.params;
 
   const product = await productsService.remove({ id });
-
-  if (product.error) {
-    const err = new Error(product.error.message);
-    err.code = product.error.code;
-    throw err;
-  }
 
   res.status(OK).json(product);
 });

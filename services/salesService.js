@@ -1,3 +1,4 @@
+const throwNewError = require('../helpers/throwNewError');
 const productsModel = require('../models/productsModel');
 const salesModel = require('../models/salesModel');
 
@@ -7,19 +8,11 @@ const create = async (sales) => {
       const product = await productsModel.getById({ id: sale.product_id });
 
       // Check if the product exists
-      if (!product) {
-        const err = new Error('Product not found');
-        err.code = 'notFound';
-        throw err;
-      }
+      if (!product) throwNewError('productNotFound');
 
       const newQuantity = product.quantity - sale.quantity;
 
-      if (newQuantity <= 0) {
-        const err = new Error('Such amount is not permitted to sell');
-        err.code = 'notEnoughQuantity';
-        throw err;
-      }
+      if (newQuantity <= 0) throwNewError('notEnoughQuantity');
 
       // Update the quantity of the product
       await productsModel.update({ ...product, quantity: newQuantity });
@@ -38,17 +31,13 @@ const getAll = async () => {
 const getById = async ({ id }) => {
   const result = await salesModel.getById({ id });
 
-  if (result.length === 0) {
-    return { error: { code: 'notFound', message: 'Sale not found' } };
-  }
+  if (result.length === 0) throwNewError('saleNotFound');
 
   return result;
 };
 
 const update = async ({ id, sale }) => {
-  const { error } = await getById({ id });
-
-  if (error) return { error };
+  await getById({ id });
 
   await salesModel.update({ id, sale });
 
@@ -58,13 +47,13 @@ const update = async ({ id, sale }) => {
 const remove = async ({ id }) => {
   const result = await getById({ id });
 
-  if (result.error) return result;
-
   // Restore quantity of each product in the database
   await Promise.all(
     result.map(async (sale) => {
       const product = await productsModel.getById({ id: sale.product_id });
+
       const newQuantity = product.quantity + sale.quantity;
+
       await productsModel.update({ ...product, quantity: newQuantity });
     }),
   );

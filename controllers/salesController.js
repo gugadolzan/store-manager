@@ -2,7 +2,7 @@ const rescue = require('express-rescue');
 
 const salesSchema = require('../schemas/salesSchema');
 const salesService = require('../services/salesService');
-const { OK, CREATED } = require('../utils/statusCodes');
+const { OK, CREATED } = require('../helpers/statusCodes');
 
 const serialize = (sale) => ({
   productId: sale.product_id,
@@ -15,6 +15,7 @@ const create = rescue(async (req, res) => {
   // Check if any of the products are invalid
   sales.forEach((sale) => {
     const { error } = salesSchema.validate(serialize(sale));
+    
     if (error) throw error;
   });
 
@@ -34,12 +35,6 @@ const getById = rescue(async (req, res) => {
 
   const result = await salesService.getById({ id });
 
-  if (result.error) {
-    const err = new Error(result.error.message);
-    err.code = result.error.code;
-    throw err;
-  }
-
   res.status(OK).json(result);
 });
 
@@ -53,12 +48,6 @@ const update = rescue(async (req, res) => {
 
   const result = await salesService.update({ id, sale });
 
-  if (result.error) {
-    const err = new Error(result.error.message);
-    err.code = result.error.code;
-    throw err;
-  }
-
   res.status(OK).json(result);
 });
 
@@ -66,12 +55,6 @@ const remove = rescue(async (req, res) => {
   const { id } = req.params;
 
   const result = await salesService.remove({ id });
-
-  if (result.error) {
-    const err = new Error(result.error.message);
-    err.code = result.error.code;
-    throw err;
-  }
 
   res.status(OK).json(result);
 });

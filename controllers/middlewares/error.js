@@ -4,12 +4,13 @@ const {
   CONFLICT,
   UNPROCESSABLE_ENTITY,
   INTERNAL_SERVER_ERROR,
-} = require('../../utils/statusCodes');
+} = require('../../helpers/statusCodes');
 
 const byErrorCode = {
   alreadyExists: CONFLICT,
   notEnoughQuantity: UNPROCESSABLE_ENTITY,
-  notFound: NOT_FOUND,
+  productNotFound: NOT_FOUND,
+  saleNotFound: NOT_FOUND,
 };
 
 const byErrorType = {
