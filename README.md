@@ -1,4 +1,4 @@
-# Store Manager Project
+# Projeto Store Manager
 
 ## Contexto
 
