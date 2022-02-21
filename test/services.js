@@ -1,10 +1,10 @@
 const { expect } = require("chai");
 const sinon = require("sinon");
 
-const productsModel = require("../../models/productsModel.js");
-const salesModel = require("../../models/salesModel.js");
-const productsService = require("../../services/productsService.js");
-const salesService = require("../../services/salesService.js");
+const productsModel = require("../models/productsModel.js");
+const salesModel = require("../models/salesModel.js");
+const productsService = require("../services/productsService.js");
+const salesService = require("../services/salesService.js");
 
 describe("Products service", () => {
   describe("when calling the create method", () => {
