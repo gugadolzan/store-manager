@@ -8,9 +8,14 @@ A API trata-se de um sistema de gerenciamento de vendas, onde será possível cr
 
 ## Tecnologias usadas
 
-> Desenvolvido usando: Node.js, Express.js, MySQL, Mocha, Chai e Sinon
+- Node.js
+- Express.js
+- MySQL
+- Mocha
+- Chai
+- Sinon
 
-## Instalando Dependências
+## Instalando dependências
 
 ```bash
 npm install
@@ -22,7 +27,7 @@ npm install
 npm start
 ```
 
-## Executando Testes
+## Executando testes
 
 ```bash
 npm run test:mocha
