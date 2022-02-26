@@ -23,7 +23,7 @@ npm install
 
 ## Executando aplicação
 
-1. Certifique-se de que o MySQL server está rodando.
+1. Certifique-se de que o MySQL server esteja rodando.
 
 2. Execute a query presente no arquivo `StoreManager.sql` para criar o banco de dados no MySQL.
 
