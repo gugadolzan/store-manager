@@ -23,6 +23,12 @@ npm install
 
 ## Executando aplicação
 
+1. Altere o nome do arquivo `.env.example` para `.env` e adicione as informações de conexão com o banco de dados.
+
+2. Certifique-se de que o MySQL server está rodando.
+
+3. Execute o comando:
+
 ```bash
 npm start
 ```
