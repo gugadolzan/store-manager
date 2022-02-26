@@ -4,7 +4,7 @@
 
 Este projeto trata-se de uma API utilizando a arquitetura MSC!
 
-A API trata-se de um sistema de gerenciamento de vendas, onde será possível criar, visualizar, deletar e atualizar produtos e vendas.
+A API trata-se de um sistema de gerenciamento de vendas, onde é possível criar, visualizar, deletar e atualizar produtos e vendas.
 
 ## Tecnologias usadas
 
