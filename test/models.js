@@ -1,9 +1,9 @@
 const { expect } = require("chai");
 const sinon = require("sinon");
 
-const connection = require("../models/connection");
-const productsModel = require("../models/productsModel.js");
-const salesModel = require("../models/salesModel.js");
+const connection = require("../src/models/connection");
+const productsModel = require("../src/models/productsModel.js");
+const salesModel = require("../src/models/salesModel.js");
 
 describe("Products model", () => {
   describe("when calling the create method", () => {

@@ -2,11 +2,11 @@
   "name": "sd-0x-store-manager",
   "version": "1.0.0",
   "description": "Simple CRUD to sales and products",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test:mocha": "nyc --all --include models --include services --include controllers mocha test/*.js --exit",
-    "start": "node index.js",
-    "debug": "nodemon index.js",
+    "test:mocha": "nyc --all --include src/models --include src/services --include src/controllers mocha test/*.js --exit",
+    "start": "node src/index.js",
+    "debug": "nodemon src/index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js, .jsx"
   },
   "repository": {
